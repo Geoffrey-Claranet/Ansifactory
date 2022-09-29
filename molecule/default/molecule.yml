@@ -2,19 +2,12 @@
 dependency:
   name: galaxy
 
-#driver:
-#  name: docker
-
 driver:
-  name: podman
+  name: docker
 
-#platforms:
-#  - name: claranet_gitlab_runner_${name:-${image:-debian}-${tag:-latest}-${scenario:-default}
-#    image: ${image:-debian}:${tag:-latest}
 platforms:
-  - name: instance
-    image: docker.io/pycontribs/centos:7
-    pre_build_image: true
+  - name: claranet_gitlab_runner_${name:-${image:-debian}-${tag:-latest}-${scenario:-default}
+    image: ${image:-debian}:${tag:-latest}
     privileged: true
     tty: true
     volumes:
@@ -36,11 +29,11 @@ provisioner:
 
 verifier:
   name: testinfra
-lint:
-  name: flake8
+  lint:
+    name: flake8
   options:
-  verbose: true
-  s: true
+    verbose: true
+    s: true
 
 lint: |
   set -e

@@ -1,0 +1,12 @@
+---
+- name: Add repository gitlab-runner
+  ansible.builtin.yum_repository:
+    name: epel
+    description: EPEL YUM repo gitlab-runner
+    file: gitlab-runner
+    baseurl: https://packages.gitlab.com/runner/gitlab-runner/{{ ansible_distribution | lower }}/{{ ansible_distribution_release }}
+    gpgcheck: false
+
+- name: Redhat | Install gitlab-runner
+  ansible.builtin.yum:
+    name: gitlab-runner

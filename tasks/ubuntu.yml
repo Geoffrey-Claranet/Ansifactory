@@ -1,0 +1,15 @@
+---
+- name: /etc/apt/trusted.gpg.d/gitlab.asc
+  ansible.builtin.get_url:
+    url: https://packages.gitlab.com/gpg.key
+    dest: /etc/apt/trusted.gpg.d/gitlab.asc
+    mode: '0444'
+
+- name: /etc/apt/sources.list.d/gitlab-runner.list
+  ansible.builtin.apt_repository:
+    repo: 'deb https://packages.gitlab.com/runner/gitlab-runner/{{ ansible_distribution | lower }}/ {{ ansible_distribution_release }} main'
+    filename: gitlab-runner
+
+- name: Ubuntu | Install gitlab-runner
+  ansible.builtin.apt:
+    name: gitlab-runner
