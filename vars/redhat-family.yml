@@ -1,6 +1,6 @@
 ---
 
-_os :
+_os:
   redhat: el
   centos: el
 

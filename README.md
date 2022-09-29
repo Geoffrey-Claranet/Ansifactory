@@ -25,7 +25,7 @@ ansible-galaxy install claranet.gitlab_runner
 
 Variable | Default value | Description
 ---------|---------------|------------
-null     | **null**      | null       
+gitlab_runner_concurrent     | **{{ ansible_processor_cores }}**      | null       
 
 ## :arrows_counterclockwise: Dependencies
 
