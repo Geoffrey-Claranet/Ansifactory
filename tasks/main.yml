@@ -16,3 +16,63 @@
       skip: true
   loop_control:
     loop_var: loop_vars
+
+- name: Import distribution specific task
+  ansible.builtin.include_tasks: "{{ ansible_os_family | lower }}.yml"
+
+- name: /etc/gitlab-runner/config.toml (concurrent)
+  ansible.builtin.lineinfile:
+    dest: /etc/gitlab-runner/config.toml
+    regexp: ^concurrent =
+    line: concurrent = {{ gitlab_runner_concurrent }}
+
+- name: gitlab-runner list
+  ansible.builtin.command: gitlab-runner list
+  register: gitlab_runner_configured_runners_
+  changed_when: false
+  check_mode: false
+
+- name: gitlab-runner register ...
+  ansible.builtin.shell:
+    cmd: |
+      set -e -x
+      {% if gitlab_runner_registration_.template_config is not none %}
+      TEMPLATE_CONFIG=`mktemp`
+      trap 'rm -f $TEMPLATE_CONFIG' EXIT
+      cat > $TEMPLATE_CONFIG <<EOF
+      {{ gitlab_runner_registration_.template_config }}
+      EOF
+      {% endif %}
+      gitlab-runner register \
+        --non-interactive \
+      {% for env in gitlab_runner_registration_.environment %}
+        --env '{{ env }}' \
+      {% endfor %}
+        --url '{{ gitlab_runner_registration_.coordinator_url }}' \
+        --registration-token '{{ gitlab_runner_registration_.token }}' \
+        --description '{{ item.key }}' \
+        --tag-list '{{ gitlab_runner_registration_.tags | join(",") }}' \
+        --executor '{{ gitlab_runner_registration_.executor }}' \
+      {% if gitlab_runner_registration_.executor == "docker" %}
+        --docker-image '{{ gitlab_runner_registration_.docker_image }}' \
+      {%   for extra_host in gitlab_runner_registration_.docker_extra_hosts %}
+        --docker-extra-hosts '{{ extra_host }}:172.17.0.1' \
+      {%   endfor %}
+      {%   for volume in gitlab_runner_registration_.docker_volumes %}
+        --docker-volumes '{{ volume }}' \
+      {%   endfor %}
+        --docker-privileged \
+      {% endif %}
+      {% if gitlab_runner_registration_.template_config is not none %}
+        --template-config $TEMPLATE_CONFIG
+      {% endif %}
+      {% for extra_option in gitlab_runner_registration_.extra_options %}
+        {{ extra_option }} \
+      {% endfor %}
+    executable: /bin/bash
+  vars:
+    _gitlab_runner_registration_: "{{ gitlab_runner_registration_default | combine(item.value) }}"
+  when: item.key not in gitlab_runner_configured_runners_.stderr
+  loop: "{{ gitlab_runner_registrations | dict2items }}"
+  loop_control:
+    label: "{{ item.key }}"

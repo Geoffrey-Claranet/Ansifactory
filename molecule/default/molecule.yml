@@ -2,14 +2,19 @@
 dependency:
   name: galaxy
 
-driver:
-  name: docker
+#driver:
+#  name: docker
 
+driver:
+  name: podman
+
+#platforms:
+#  - name: claranet_gitlab_runner_${name:-${image:-debian}-${tag:-latest}-${scenario:-default}
+#    image: ${image:-debian}:${tag:-latest}
 platforms:
-  # On "${name:-${image:-debian}", the last brace does not miss, it works like that...
-  # The env var should be used when the image variable refers to a full registry path like registry.access.redhat.com/ubi8/ubi
-  - name: claranet_gitlab-runner_${name:-${image:-debian}-${tag:-latest}-${scenario:-default}
-    image: ${image:-debian}:${tag:-latest}
+  - name: instance
+    image: docker.io/pycontribs/centos:7
+    pre_build_image: true
     privileged: true
     tty: true
     volumes:
@@ -31,11 +36,11 @@ provisioner:
 
 verifier:
   name: testinfra
-  lint:
-    name: flake8
+lint:
+  name: flake8
   options:
-    verbose: true
-    s: true
+  verbose: true
+  s: true
 
 lint: |
   set -e

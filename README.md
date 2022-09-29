@@ -18,7 +18,7 @@ Ansible >= 2.10
 ## :zap: Installation
 
 ```bash
-ansible-galaxy install claranet.gitlab-runner
+ansible-galaxy install claranet.gitlab_runner
 ```
 
 ## :gear: Role variables
@@ -37,7 +37,7 @@ N/A
 ---
 - hosts: all
   roles:
-    - claranet.gitlab-runner
+    - claranet.gitlab_runner
 ```
 
 ## :closed_lock_with_key: [Hardening](HARDENING.md)

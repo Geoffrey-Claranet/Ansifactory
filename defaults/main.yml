@@ -1,2 +1,19 @@
 ---
-# defaults file for role
+
+gitlab_runner_concurrent: '{{ ansible_processor_cores }}'
+
+gitlab_runner_version: null
+
+gitlab_runner_registrations: {}
+
+gitlab_runner_registration_default:
+  executor: docker
+  tags: []
+  docker_image: 'docker:latest'
+  docker_extra_hosts: []
+  docker_volumes:
+    - /certs/client
+  environment:
+    - "DOCKER_DRIVER=overlay2"
+  template_config: null
+  extra_options: []
