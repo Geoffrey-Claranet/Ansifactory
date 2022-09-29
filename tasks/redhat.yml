@@ -1,12 +1,31 @@
 ---
+- name: Install gpg key
+  ansible.builtin.rpm_key:
+    key: https://packages.gitlab.com/gpg.key
+    state: present
+
 - name: Add repository gitlab-runner
   ansible.builtin.yum_repository:
-    name: epel
-    description: EPEL YUM repo gitlab-runner
-    file: gitlab-runner
-    baseurl: https://packages.gitlab.com/runner/gitlab-runner/{{ ansible_distribution | lower }}/{{ ansible_distribution_release }}
-    gpgcheck: false
+    name: gitlab-runner
+    description: YUM repo gitlab-runner
+    baseurl: https://packages.gitlab.com/runner/gitlab-runner/{{ _os[ansible_distro] }}/{{ ansible_distro_major_version }}/$basearch
+    gpgcheck: 1
+    gpgkey: https://packages.gitlab.com/gpg.key
+    sslverify: 1
+    sslcacert: /etc/pki/tls/certs/ca-bundle.crt
+
+- name: Add repository gitlab-runner-source
+  ansible.builtin.yum_repository:
+    name: gitlab-runner-source
+    description: YUM repo gitlab-runner
+    baseurl: https://packages.gitlab.com/runner/gitlab-runner/{{ _os[ansible_distro] }}/{{ ansible_distro_major_version }}/SRPMS
+    gpgcheck: 1
+    gpgkey: https://packages.gitlab.com/gpg.key
+    sslverify: 1
+    sslcacert: /etc/pki/tls/certs/ca-bundle.crt
 
 - name: Redhat | Install gitlab-runner
   ansible.builtin.yum:
     name: gitlab-runner
+    state: latest
+    update_cache: true

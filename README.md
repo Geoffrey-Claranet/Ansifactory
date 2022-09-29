@@ -9,7 +9,7 @@
 
 > :star: Star us on GitHub — it motivates us a lot!
 
-Installes et configure un runner Gitlab utilisant Docker.
+Install and configure a Gitlab runner using Docker.
 
 ## :warning: Requirements
 
@@ -38,6 +38,34 @@ N/A
 - hosts: all
   roles:
     - claranet.gitlab_runner
+
+
+.
+├── CONTRIBUTING.md
+├── defaults
+│   └── main.yml
+├── HARDENING.md
+├── LICENSE
+├── meta
+│   └── main.yml
+├── molecule
+│   └── default
+│       ├── converge.yml
+│       ├── Dockerfile.j2
+│       ├── molecule.yml
+│       └── tests
+│           └── test_default.py
+├── README.md
+├── tasks
+│   ├── debian.yml
+│   ├── main.yml
+│   ├── redhat.yml
+│   └── ubuntu.yml
+└── vars
+    ├── amazon.yml
+    ├── debian-family.yml
+    ├── main.yml
+    └── redhat-family.yml
 ```
 
 ## :closed_lock_with_key: [Hardening](HARDENING.md)

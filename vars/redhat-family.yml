@@ -1,3 +1,7 @@
 ---
 
+_os :
+  redhat: el
+  centos: el
+
 _gitlab_runner_service_name: gitlab-runner

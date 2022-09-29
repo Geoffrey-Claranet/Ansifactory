@@ -24,13 +24,9 @@ galaxy_info:
         - all
     - name: Debian
       versions:
-        - stretch
-        - buster
-        - bullseye
+        - all
     - name: Ubuntu
       versions:
-        - focal
-        - groovy
-        - hirsute
+        - all
 
 dependencies: []
